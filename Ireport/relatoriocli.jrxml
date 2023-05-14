@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="relatoriocli" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="a0850d1e-f28c-483f-b666-94c5ea8ccb43">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<queryString>
+		<![CDATA[select*from sistema.cliente order by nomecli;]]>
+	</queryString>
+	<field name="idcli" class="java.lang.Integer"/>
+	<field name="nomecli" class="java.lang.String"/>
+	<field name="endcli" class="java.lang.String"/>
+	<field name="fonecli" class="java.lang.String"/>
+	<field name="emailcli" class="java.lang.String"/>
+	<field name="bairrocli" class="java.lang.String"/>
+	<field name="cidadecli" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="62" splitType="Stretch">
+			<staticText>
+				<reportElement x="211" y="16" width="178" height="41" uuid="a4796f06-b9fe-4476-8704-f5be82c89e9b"/>
+				<textElement>
+					<font fontName="Segoe UI" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Relatório Clientes]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="442" y="16" width="100" height="20" uuid="289a79b7-265a-4db4-9200-b1c3a2724560"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<image>
+				<reportElement x="0" y="2" width="49" height="55" uuid="c9335c3d-7556-4419-acd8-d4bd1d46069e"/>
+				<imageExpression><![CDATA["C:\\Users\\rayon\\Pasta\\Desktop\\logo\\logo.png"]]></imageExpression>
+			</image>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="35" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="31" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="76" height="20" uuid="ac6d1e32-70ed-43f0-8960-0951166fc5d6"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[ID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="76" y="0" width="135" height="20" uuid="e378f916-99fc-4c56-b2ec-a10929f73b6c"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nome]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="211" y="0" width="100" height="20" uuid="9bcb95c4-a55e-40d4-b17b-7c28bbc720c4"/>
+				<textElement>
+					<font isBold="true" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Contato]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="398" y="0" width="157" height="20" uuid="c8152f87-33e9-4489-b560-cfd377dc19b5"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[E-mail]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="311" y="0" width="87" height="20" uuid="cb6fb391-0bc7-4392-8471-243832ed4ac1"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cidade]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="49" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="76" height="20" uuid="6c7570f4-7642-40e9-9f34-498576d70cd8"/>
+				<textFieldExpression><![CDATA[$F{idcli}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="76" y="0" width="135" height="20" uuid="859b493f-1da5-46bd-ba19-6ac4c52cfacb"/>
+				<textFieldExpression><![CDATA[$F{nomecli}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="211" y="0" width="100" height="20" uuid="90710dd3-d30e-422a-ad46-e0aaa99337c4"/>
+				<textFieldExpression><![CDATA[$F{fonecli}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="398" y="0" width="157" height="20" uuid="fb236a8f-6c27-4a31-98e4-d23ca00c6f71"/>
+				<textFieldExpression><![CDATA[$F{emailcli}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="311" y="0" width="87" height="20" uuid="e037d29c-da81-4e47-b73c-dfcbe58c51aa"/>
+				<textFieldExpression><![CDATA[$F{cidadecli}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch">
+			<textField evaluationTime="Report">
+				<reportElement x="455" y="34" width="100" height="20" uuid="b4507272-33db-4c00-83b2-0d416ed88401"/>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>
