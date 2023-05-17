@@ -74,7 +74,8 @@ public class TelaCliente extends javax.swing.JInternalFrame {
             } else {
                 int adicionado = pst.executeUpdate();
                 if (adicionado > 0) {
-                    JOptionPane.showMessageDialog(null, "Cliente adicionado com sucesso");
+                    recuperarCliente();
+                    JOptionPane.showMessageDialog(null, "Registro Inserido!");
                     limpar();
                 }
             }
@@ -214,7 +215,28 @@ public class TelaCliente extends javax.swing.JInternalFrame {
         btnClienteDeletar.setEnabled(true);
 
     }
-
+/**
+     * Método responsável para recuperar o ID do Usuário
+     */
+    private void recuperarCliente() throws ClassNotFoundException {
+        String sql = "select max(idcli) from sistema.cliente";
+        try {
+            conexao = ModuloConexao.conectar();
+            pst = conexao.prepareStatement(sql);
+            rs = pst.executeQuery();
+            if (rs.next()) {
+                txtCliId.setText(rs.getString(1));
+            }
+        } catch (HeadlessException | SQLException e) {
+            JOptionPane.showMessageDialog(null, e);
+        } finally {
+            try {
+                conexao.close();
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(null, ex);
+            }
+        }
+    }
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -428,6 +450,7 @@ public class TelaCliente extends javax.swing.JInternalFrame {
         getContentPane().add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 160, -1, -1));
 
         txtCliId.setEditable(false);
+        txtCliId.setOpaque(false);
         getContentPane().add(txtCliId, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 70, 50, -1));
 
         jPanel3.setBackground(new java.awt.Color(255, 255, 255));

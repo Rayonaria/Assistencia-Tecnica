@@ -70,9 +70,10 @@ public class Telaprincipal extends javax.swing.JFrame {
         jDesktopPane3 = new javax.swing.JDesktopPane();
         menu = new javax.swing.JMenuBar();
         menCad = new javax.swing.JMenu();
+        menCadUse = new javax.swing.JMenuItem();
         menCadCli = new javax.swing.JMenuItem();
         menCadOS = new javax.swing.JMenuItem();
-        menCadUse = new javax.swing.JMenuItem();
+        medMat = new javax.swing.JMenuItem();
         MenRela = new javax.swing.JMenu();
         menRelCli = new javax.swing.JMenuItem();
         menRelSer = new javax.swing.JMenuItem();
@@ -130,6 +131,15 @@ public class Telaprincipal extends javax.swing.JFrame {
 
         menCad.setText("Cadastro");
 
+        menCadUse.setText("Usuários");
+        menCadUse.setEnabled(false);
+        menCadUse.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menCadUseActionPerformed(evt);
+            }
+        });
+        menCad.add(menCadUse);
+
         menCadCli.setText("Cliente");
         menCadCli.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -146,14 +156,13 @@ public class Telaprincipal extends javax.swing.JFrame {
         });
         menCad.add(menCadOS);
 
-        menCadUse.setText("Usuários");
-        menCadUse.setEnabled(false);
-        menCadUse.addActionListener(new java.awt.event.ActionListener() {
+        medMat.setText("Produto");
+        medMat.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                menCadUseActionPerformed(evt);
+                medMatActionPerformed(evt);
             }
         });
-        menCad.add(menCadUse);
+        menCad.add(medMat);
 
         menu.add(menCad);
 
@@ -271,6 +280,13 @@ public class Telaprincipal extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_menRelSerActionPerformed
 
+    private void medMatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_medMatActionPerformed
+        TelaItens itens = null;
+        itens = new TelaItens();
+        itens.setVisible(true);
+        jDesktopPane3.add(itens);
+    }//GEN-LAST:event_medMatActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -322,6 +338,7 @@ public class Telaprincipal extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JMenuItem medMat;
     private javax.swing.JMenu menCad;
     private javax.swing.JMenuItem menCadCli;
     private javax.swing.JMenuItem menCadOS;
