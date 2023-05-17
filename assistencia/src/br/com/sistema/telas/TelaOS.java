@@ -96,6 +96,7 @@ public class TelaOS extends javax.swing.JInternalFrame {
                 int adicionado = pst.executeUpdate();
 
                 if (adicionado > 0) {
+                    recuperarOs();
                     JOptionPane.showMessageDialog(null, "OS emitida com sucesso");
                     btnOsSalvar.setEnabled(false);
                     btnOsbuscar.setEnabled(false);
@@ -118,8 +119,8 @@ public class TelaOS extends javax.swing.JInternalFrame {
      */
     private void pesquisarOs() throws ClassNotFoundException {
         String num_os = JOptionPane.showInputDialog("Número da OS");
-        
-       String sql = "select * from sistema.os where os = " + num_os;
+
+        String sql = "select * from sistema.os where os = " + num_os;
         try {
             conexao = ModuloConexao.conectar();
             pst = conexao.prepareStatement(sql);
@@ -244,6 +245,29 @@ public class TelaOS extends javax.swing.JInternalFrame {
         btnOseditar.setEnabled(false);
         btnOsexcluir.setEnabled(false);
 
+    }
+
+    /**
+     * Método responsável para recuperar o ID da Os
+     */
+    private void recuperarOs() throws ClassNotFoundException {
+        String sql = "select max(os) from sistema.os";
+        try {
+            conexao = ModuloConexao.conectar();
+            pst = conexao.prepareStatement(sql);
+            rs = pst.executeQuery();
+            if (rs.next()) {
+                txtOs.setText(rs.getString(1));
+            }
+        } catch (HeadlessException | SQLException e) {
+            JOptionPane.showMessageDialog(null, e);
+        } finally {
+            try {
+                conexao.close();
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(null, ex);
+            }
+        }
     }
 
     public TelaOS() {

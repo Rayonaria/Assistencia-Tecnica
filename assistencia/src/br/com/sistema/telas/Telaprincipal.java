@@ -60,6 +60,9 @@ public class Telaprincipal extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jMenuBar1 = new javax.swing.JMenuBar();
+        jMenu1 = new javax.swing.JMenu();
+        jMenu2 = new javax.swing.JMenu();
         jLabel1 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
@@ -75,6 +78,12 @@ public class Telaprincipal extends javax.swing.JFrame {
         menRelSer = new javax.swing.JMenuItem();
         menOp = new javax.swing.JMenu();
         menOpSa = new javax.swing.JMenuItem();
+
+        jMenu1.setText("File");
+        jMenuBar1.add(jMenu1);
+
+        jMenu2.setText("Edit");
+        jMenuBar1.add(jMenu2);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Sistema OS");
@@ -183,7 +192,7 @@ public class Telaprincipal extends javax.swing.JFrame {
 
         setJMenuBar(menu);
 
-        setSize(new java.awt.Dimension(1040, 617));
+        setSize(new java.awt.Dimension(1034, 617));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
@@ -309,6 +318,9 @@ public class Telaprincipal extends javax.swing.JFrame {
     private javax.swing.JDesktopPane jDesktopPane3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenu jMenu2;
+    private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JMenu menCad;
     private javax.swing.JMenuItem menCadCli;

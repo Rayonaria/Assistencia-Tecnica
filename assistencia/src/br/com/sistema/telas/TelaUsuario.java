@@ -32,41 +32,20 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
      * Método responsável pela pesquisa do usuário (Id do usuário)
      */
     private void consultar() throws ClassNotFoundException {
-        if (txtUsuId.getText().isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Informe o Id do usuário");
-            txtUsuId.requestFocus();
-        } else {
-            String sql = "select * from sistema.usuario where id=?";
+        String sql = "select id , nome , fone as fone, login , perfil from sistema.usuario where nome like ?";
+        try {
+            conexao = ModuloConexao.conectar();
+            pst = conexao.prepareStatement(sql);
+            pst.setString(1, txtUseipesquisar.getText() + "%");
+            rs = pst.executeQuery();
+            tbUsuario.setModel(DbUtils.resultSetToTableModel(rs));
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, e);
+        } finally {
             try {
-                conexao = ModuloConexao.conectar();
-                pst = conexao.prepareStatement(sql);
-                pst.setString(1, txtUsuId.getText());
-                rs = pst.executeQuery();
-                if (rs.next()) {
-                    txtUsuNome.setText(rs.getString(2));
-                    txtUsuFone.setText(rs.getString(3));
-                    txtUsuLogin.setText(rs.getString(4));
-                    txtUsuSenha.setText(rs.getString(5));
-                    cboUsuPerfil.setSelectedItem(rs.getString(6));
-                    txtUsuId.setEnabled(false);
-                    btnNovo.setEnabled(false);
-                    btnEditar.setEnabled(true);
-                    btnDeletar.setEnabled(true);
-                    txtUsuSenha.setEnabled(false);
-
-                } else {
-                    JOptionPane.showMessageDialog(null, "Usuário não cadastrado");
-                    txtUsuId.setEnabled(false);
-
-                }
-            } catch (HeadlessException | SQLException e) {
-                JOptionPane.showMessageDialog(null, e);
-            } finally {
-                try {
-                    conexao.close();
-                } catch (SQLException ex) {
-                    JOptionPane.showMessageDialog(null, ex);
-                }
+                conexao.close();
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(null, ex);
             }
         }
     }
@@ -75,17 +54,16 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
      * Método responsável por adicionar um novo usuário
      */
     private void novoUsuario() {
-        String sql = "insert into sistema.usuario(id,nome,fone,login,senha,perfil) values(?,?,?,?,?,?)";
+        String sql = "insert into sistema.usuario(nome,fone,login,senha,perfil) values(?,?,?,?,?)";
         try {
             conexao = ModuloConexao.conectar();
             pst = conexao.prepareStatement(sql);
-            pst.setString(1, txtUsuId.getText());
-            pst.setString(2, txtUsuNome.getText());
-            pst.setString(3, txtUsuFone.getText());
-            pst.setString(4, txtUsuLogin.getText());
-            pst.setString(5, txtUsuSenha.getText());
-            pst.setString(6, cboUsuPerfil.getSelectedItem().toString());
-            if ((txtUsuId.getText().isEmpty()) || (txtUsuNome.getText().isEmpty()) || (txtUsuLogin.getText().isEmpty()) || (txtUsuSenha.getText()).isEmpty() || cboUsuPerfil.getSelectedItem().equals(" ")) {
+            pst.setString(1, txtUsuNome.getText());
+            pst.setString(2, txtUsuFone.getText());
+            pst.setString(3, txtUsuLogin.getText());
+            pst.setString(4, txtUsuSenha.getText());
+            pst.setString(5, cboUsuPerfil.getSelectedItem().toString());
+            if ((txtUsuNome.getText().isEmpty()) || (txtUsuLogin.getText().isEmpty()) || (txtUsuSenha.getText()).isEmpty() || cboUsuPerfil.getSelectedItem().equals(" ")) {
                 JOptionPane.showMessageDialog(null, "Preenche todos os campos obrigatórios");
             } else {
                 int adicionado = pst.executeUpdate();
@@ -119,7 +97,7 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
             pst.setString(3, txtUsuLogin.getText());
             pst.setString(4, txtUsuSenha.getText());
             pst.setString(5, cboUsuPerfil.getSelectedItem().toString());
-            pst.setString(6, txtUsuId.getText());
+            pst.setInt(6, Integer.parseInt(txtUsuId.getText()));
             if ((txtUsuId.getText().isEmpty()) || (txtUsuNome.getText().isEmpty()) || (txtUsuLogin.getText().isEmpty()) || (txtUsuSenha.getText()).isEmpty() || cboUsuPerfil.getSelectedItem().equals(" ")) {
                 JOptionPane.showMessageDialog(null, "Preenche todos os campos obrigatórios");
             } else {
@@ -150,7 +128,7 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
             try {
                 conexao = ModuloConexao.conectar();
                 pst = conexao.prepareStatement(sql);
-                pst.setString(1, txtUsuId.getText());
+                pst.setInt(1, Integer.parseInt(txtUsuId.getText()));
                 int apagado = pst.executeUpdate();
                 if (apagado > 0) {
                     JOptionPane.showMessageDialog(null, "Registro excluído");
@@ -174,6 +152,22 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
     }
 
     /**
+     * Método responsável para setar os campos de texto com o conteúdo da tabela
+     */
+    private void setarCampos() {
+        int setar = tbUsuario.getSelectedRow();
+        txtUsuId.setText(tbUsuario.getModel().getValueAt(setar, 0).toString());
+        txtUsuNome.setText(tbUsuario.getModel().getValueAt(setar, 1).toString());
+        txtUsuFone.setText(tbUsuario.getModel().getValueAt(setar, 2).toString());
+        txtUsuLogin.setText(tbUsuario.getModel().getValueAt(setar, 3).toString());
+        cboUsuPerfil.setSelectedItem(tbUsuario.getModel().getValueAt(setar, 4).toString());
+
+        btnNovo.setEnabled(false);
+        btnEditar.setEnabled(true);
+        btnDeletar.setEnabled(true);
+    }
+
+    /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
      * regenerated by the Form Editor.
@@ -182,28 +176,31 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
-        txtUsuId = new javax.swing.JTextField();
-        txtUsuNome = new javax.swing.JTextField();
-        txtUsuLogin = new javax.swing.JTextField();
-        txtUsuSenha = new javax.swing.JTextField();
-        cboUsuPerfil = new javax.swing.JComboBox<String>();
-        jLabel6 = new javax.swing.JLabel();
-        txtUsuFone = new javax.swing.JTextField();
         jPanel1 = new javax.swing.JPanel();
-        jPanel2 = new javax.swing.JPanel();
-        jLabel7 = new javax.swing.JLabel();
-        btnConsultar = new javax.swing.JButton();
         jLabel13 = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
         btnNovo = new javax.swing.JButton();
         btnEditar = new javax.swing.JButton();
         btnDeletar = new javax.swing.JButton();
+        jPanel2 = new javax.swing.JPanel();
+        jLabel7 = new javax.swing.JLabel();
+        txtUsuId = new javax.swing.JTextField();
+        jLabel1 = new javax.swing.JLabel();
+        txtUsuNome = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        txtUsuFone = new javax.swing.JTextField();
+        jLabel4 = new javax.swing.JLabel();
+        txtUsuSenha = new javax.swing.JTextField();
+        txtUsuLogin = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        cboUsuPerfil = new javax.swing.JComboBox<String>();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tbUsuario = new javax.swing.JTable();
+        jLabel8 = new javax.swing.JLabel();
+        txtUseipesquisar = new javax.swing.JTextField();
 
         setClosable(true);
         setIconifiable(true);
@@ -213,55 +210,6 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
         setPreferredSize(new java.awt.Dimension(669, 480));
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jLabel1.setText("ID");
-        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(223, 194, 21, -1));
-
-        jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jLabel2.setText(" Nome");
-        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(213, 242, -1, -1));
-
-        jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jLabel3.setText(" Login");
-        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(583, 242, -1, -1));
-
-        jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jLabel4.setText(" Senha");
-        getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(578, 293, -1, -1));
-
-        jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jLabel5.setText("* Perfil");
-        getContentPane().add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(629, 343, -1, -1));
-
-        txtUsuId.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtUsuIdActionPerformed(evt);
-            }
-        });
-        getContentPane().add(txtUsuId, new org.netbeans.lib.awtextra.AbsoluteConstraints(262, 191, 47, -1));
-        getContentPane().add(txtUsuNome, new org.netbeans.lib.awtextra.AbsoluteConstraints(261, 239, 260, -1));
-
-        txtUsuLogin.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtUsuLoginActionPerformed(evt);
-            }
-        });
-        getContentPane().add(txtUsuLogin, new org.netbeans.lib.awtextra.AbsoluteConstraints(629, 239, 260, -1));
-        getContentPane().add(txtUsuSenha, new org.netbeans.lib.awtextra.AbsoluteConstraints(629, 290, 260, -1));
-
-        cboUsuPerfil.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "admin", "user" }));
-        cboUsuPerfil.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cboUsuPerfilActionPerformed(evt);
-            }
-        });
-        getContentPane().add(cboUsuPerfil, new org.netbeans.lib.awtextra.AbsoluteConstraints(680, 340, 154, -1));
-
-        jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jLabel6.setText("Fone");
-        getContentPane().add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(219, 293, -1, -1));
-        getContentPane().add(txtUsuFone, new org.netbeans.lib.awtextra.AbsoluteConstraints(261, 290, 260, -1));
-
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -270,41 +218,10 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 207, Short.MAX_VALUE)
+            .addGap(0, 427, Short.MAX_VALUE)
         );
 
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 535, -1, -1));
-
-        jPanel2.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-
-        jLabel7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/com/sistema/imagens/cliente.png"))); // NOI18N
-
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(31, 31, 31))
-        );
-
-        getContentPane().add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(75, 182, -1, 117));
-
-        btnConsultar.setText("Consultar");
-        btnConsultar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnConsultarActionPerformed(evt);
-            }
-        });
-        getContentPane().add(btnConsultar, new org.netbeans.lib.awtextra.AbsoluteConstraints(327, 190, -1, -1));
 
         jLabel13.setBackground(new java.awt.Color(0, 102, 102));
         jLabel13.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
@@ -351,21 +268,205 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
         });
         jPanel3.add(btnDeletar, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 10, -1, -1));
 
+        jPanel2.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        jLabel7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/com/sistema/imagens/cliente.png"))); // NOI18N
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(31, 31, 31))
+        );
+
+        txtUsuId.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtUsuIdActionPerformed(evt);
+            }
+        });
+
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jLabel1.setText("ID");
+
+        jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jLabel2.setText(" Nome");
+
+        jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jLabel6.setText("Fone");
+
+        jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jLabel4.setText(" Senha");
+
+        txtUsuLogin.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtUsuLoginActionPerformed(evt);
+            }
+        });
+
+        jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jLabel3.setText(" Login");
+
+        jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jLabel5.setText("* Perfil");
+
+        cboUsuPerfil.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "admin", "user" }));
+        cboUsuPerfil.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cboUsuPerfilActionPerformed(evt);
+            }
+        });
+
+        tbUsuario.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        tbUsuario.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
+            },
+            new String [] {
+                "ID", "Nome", "Fone", "E-mail", "Perfil"
+            }
+        ));
+        tbUsuario.setGridColor(new java.awt.Color(255, 255, 255));
+        tbUsuario.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tbUsuarioMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(tbUsuario);
+
+        jLabel8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/com/sistema/imagens/pesquisar.png"))); // NOI18N
+
+        txtUseipesquisar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtUseipesquisarActionPerformed(evt);
+            }
+        });
+        txtUseipesquisar.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtUseipesquisarKeyReleased(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                .addContainerGap(279, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 438, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(293, 293, 293))
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addGap(74, 74, 74)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(jPanel4Layout.createSequentialGroup()
+                                .addGap(6, 6, 6)
+                                .addComponent(jLabel6)
+                                .addGap(15, 15, 15)
+                                .addComponent(txtUsuFone, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel4Layout.createSequentialGroup()
+                                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel4Layout.createSequentialGroup()
+                                        .addComponent(jLabel2)
+                                        .addGap(11, 11, 11))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, 18)))
+                                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(txtUsuId, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtUsuNome, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel4Layout.createSequentialGroup()
+                                .addGap(5, 5, 5)
+                                .addComponent(jLabel3)
+                                .addGap(13, 13, 13)
+                                .addComponent(txtUsuLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel4Layout.createSequentialGroup()
+                                .addComponent(jLabel5)
+                                .addGap(13, 13, 13)
+                                .addComponent(cboUsuPerfil, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel4Layout.createSequentialGroup()
+                                .addComponent(jLabel4)
+                                .addGap(14, 14, 14)
+                                .addComponent(txtUsuSenha, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 676, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                            .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(txtUseipesquisar, javax.swing.GroupLayout.PREFERRED_SIZE, 239, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(138, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
-                .addGap(84, 84, 84)
+                .addGap(73, 73, 73)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(421, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(82, 82, 82))
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(txtUsuId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel1))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(jPanel4Layout.createSequentialGroup()
+                                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel4Layout.createSequentialGroup()
+                                        .addGap(3, 3, 3)
+                                        .addComponent(jLabel3))
+                                    .addComponent(txtUsuLogin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(31, 31, 31)
+                                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel4Layout.createSequentialGroup()
+                                        .addGap(3, 3, 3)
+                                        .addComponent(jLabel4))
+                                    .addComponent(txtUsuSenha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(jPanel4Layout.createSequentialGroup()
+                                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel4Layout.createSequentialGroup()
+                                        .addGap(3, 3, 3)
+                                        .addComponent(jLabel2))
+                                    .addComponent(txtUsuNome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(31, 31, 31)
+                                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel4Layout.createSequentialGroup()
+                                        .addGap(3, 3, 3)
+                                        .addComponent(jLabel6))
+                                    .addComponent(txtUsuFone, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(1, 1, 1)))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel4Layout.createSequentialGroup()
+                                .addGap(3, 3, 3)
+                                .addComponent(jLabel5))
+                            .addComponent(cboUsuPerfil, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(36, 36, 36)))
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(txtUseipesquisar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(70, Short.MAX_VALUE))
         );
 
         getContentPane().add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 10, 1010, 550));
@@ -397,17 +498,24 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
         remover();
     }//GEN-LAST:event_btnDeletarActionPerformed
 
-    private void btnConsultarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConsultarActionPerformed
+    private void tbUsuarioMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbUsuarioMouseClicked
+        setarCampos();
+    }//GEN-LAST:event_tbUsuarioMouseClicked
+
+    private void txtUseipesquisarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtUseipesquisarActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtUseipesquisarActionPerformed
+
+    private void txtUseipesquisarKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtUseipesquisarKeyReleased
         try {
             consultar();
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(TelaUsuario.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }//GEN-LAST:event_btnConsultarActionPerformed
+    }//GEN-LAST:event_txtUseipesquisarKeyReleased
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnConsultar;
     private javax.swing.JButton btnDeletar;
     private javax.swing.JButton btnEditar;
     private javax.swing.JButton btnNovo;
@@ -420,10 +528,14 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable tbUsuario;
+    private javax.swing.JTextField txtUseipesquisar;
     private javax.swing.JTextField txtUsuFone;
     private javax.swing.JTextField txtUsuId;
     private javax.swing.JTextField txtUsuLogin;
