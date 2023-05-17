@@ -69,7 +69,7 @@ public class Tela_Loginn extends javax.swing.JFrame {
                 if (perfil.equals("admin")) {
                     Telaprincipal tela = new Telaprincipal();
                     tela.setVisible(true);
-                    Telaprincipal.MenRela.setEnabled(true);
+                    Telaprincipal.menRelSer.setEnabled(true);
                     Telaprincipal.menCadUse.setEnabled(true);
                     this.dispose();
                     conexao.close();

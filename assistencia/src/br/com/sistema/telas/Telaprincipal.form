@@ -65,7 +65,6 @@
         <Menu class="javax.swing.JMenu" name="MenRela">
           <Properties>
             <Property name="text" type="java.lang.String" value="Relat&#xf3;rio"/>
-            <Property name="enabled" type="boolean" value="false"/>
           </Properties>
           <AuxValues>
             <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="9"/>
@@ -82,10 +81,14 @@
             <MenuItem class="javax.swing.JMenuItem" name="menRelSer">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Servi&#xe7;os"/>
+                <Property name="enabled" type="boolean" value="false"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menRelSerActionPerformed"/>
               </Events>
+              <AuxValues>
+                <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="9"/>
+              </AuxValues>
             </MenuItem>
           </SubComponents>
         </Menu>

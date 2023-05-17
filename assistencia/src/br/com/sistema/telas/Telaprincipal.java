@@ -158,7 +158,6 @@ public class Telaprincipal extends javax.swing.JFrame {
         menu.add(menCad);
 
         MenRela.setText("Relatório");
-        MenRela.setEnabled(false);
 
         menRelCli.setText("Clientes");
         menRelCli.addActionListener(new java.awt.event.ActionListener() {
@@ -169,6 +168,7 @@ public class Telaprincipal extends javax.swing.JFrame {
         MenRela.add(menRelCli);
 
         menRelSer.setText("Serviços");
+        menRelSer.setEnabled(false);
         menRelSer.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 menRelSerActionPerformed(evt);
@@ -329,7 +329,7 @@ public class Telaprincipal extends javax.swing.JFrame {
     private javax.swing.JMenu menOp;
     private javax.swing.JMenuItem menOpSa;
     private javax.swing.JMenuItem menRelCli;
-    private javax.swing.JMenuItem menRelSer;
+    public static javax.swing.JMenuItem menRelSer;
     private javax.swing.JMenuBar menu;
     // End of variables declaration//GEN-END:variables
 }
