@@ -32,7 +32,7 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
      * Método responsável pela pesquisa do usuário (Id do usuário)
      */
     private void consultar() throws ClassNotFoundException {
-        String sql = "select id , nome , fone as fone, login , perfil from sistema.usuario where nome like ?";
+        String sql = "select id , nome , fone , login , senha, perfil from sistema.usuario where nome like ?";
         try {
             conexao = ModuloConexao.conectar();
             pst = conexao.prepareStatement(sql);
@@ -160,7 +160,8 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
         txtUsuNome.setText(tbUsuario.getModel().getValueAt(setar, 1).toString());
         txtUsuFone.setText(tbUsuario.getModel().getValueAt(setar, 2).toString());
         txtUsuLogin.setText(tbUsuario.getModel().getValueAt(setar, 3).toString());
-        cboUsuPerfil.setSelectedItem(tbUsuario.getModel().getValueAt(setar, 4).toString());
+        txtUsuSenha.setText(tbUsuario.getModel().getValueAt(setar, 4).toString());
+        cboUsuPerfil.setSelectedItem(tbUsuario.getModel().getValueAt(setar, 5).toString());
 
         btnNovo.setEnabled(false);
         btnEditar.setEnabled(true);
