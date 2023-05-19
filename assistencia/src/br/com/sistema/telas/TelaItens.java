@@ -267,6 +267,7 @@ public class TelaItens extends javax.swing.JInternalFrame {
         jLabel13.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         getContentPane().add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(11, 11, 990, -1));
 
+        txtCod.setEditable(false);
         txtCod.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtCodActionPerformed(evt);

@@ -314,6 +314,8 @@ public class TelaUsuario extends javax.swing.JInternalFrame {
                 .addGap(31, 31, 31))
         );
 
+        txtUsuId.setEditable(false);
+        txtUsuId.setBackground(new java.awt.Color(204, 204, 204));
         txtUsuId.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtUsuIdActionPerformed(evt);
