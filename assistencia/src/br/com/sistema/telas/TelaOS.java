@@ -434,7 +434,7 @@ public class TelaOS extends javax.swing.JInternalFrame {
         jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel5.setText("Status");
 
-        cboOsSit.setModel(new javax.swing.DefaultComboBoxModel(new String[] { " ", "Aguardando Retirada", "Entrega Concluída", "Orçamento Reprovado", "Orçamento Aprovado", "Aguardando Peças", "Abandonado pelo Cliente", "Retornou" }));
+        cboOsSit.setModel(new javax.swing.DefaultComboBoxModel(new String[] { " ", "Aguardando Orçamento", "Aguardando Retirada", "Entrega Concluída", "Orçamento Reprovado", "Orçamento Aprovado", "Aguardando Peças", "Abandonado pelo Cliente", "Retornou" }));
 
         jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel7.setText("Valor Total");

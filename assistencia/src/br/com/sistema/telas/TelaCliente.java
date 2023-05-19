@@ -450,6 +450,7 @@ public class TelaCliente extends javax.swing.JInternalFrame {
         getContentPane().add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 160, -1, -1));
 
         txtCliId.setEditable(false);
+        txtCliId.setBackground(new java.awt.Color(204, 204, 204));
         txtCliId.setOpaque(false);
         getContentPane().add(txtCliId, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 70, 50, -1));
 
